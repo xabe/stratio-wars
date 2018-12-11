@@ -15,10 +15,7 @@ public class CustomResourceConfig extends ResourceConfig {
         packages("com.xabe.stratio.wars.resource");
         register(JacksonFeature.class);
         register(new ObjectMapperContextResolver());
-        register(new LoggingFeature());
         property( ServerProperties.BV_FEATURE_DISABLE, true );
         property( ServerProperties.RESOURCE_VALIDATION_IGNORE_ERRORS, true );
-        property( ServerProperties.TRACING, "ALL" );
-        property( ServerProperties.TRACING_THRESHOLD, "VERBOSE" );
     }
 }

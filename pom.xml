@@ -558,4 +558,61 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>start</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <executable>java</executable>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <arguments>
+                                <argument>-Xmx512M</argument>
+                                <argument>-Xms512M</argument>
+                                <argument>-Xss512K</argument>
+                                <argument>-XX:MetaspaceSize=128M</argument>
+                                <argument>-XX:MaxMetaspaceSize=128M</argument>
+                                <argument>-XX:+UseParallelGC</argument>
+                                <argument>-Djava.security.egd=file:/dev/./urandom</argument>
+                                <argument>-Dsun.rmi.dgc.client.gcInterval=3600000</argument>
+                                <argument>-Dsun.rmi.dgc.server.gcInterval=3600000</argument>
+                                <argument>-Xdebug</argument>
+                                <argument>-Xlog:gc*</argument>
+                                <argument>-verbose:gc</argument>
+                                <argument>-Xloggc:${tmp.dir}/${app.name}_GC</argument>
+                                <argument>-XX:+HeapDumpOnOutOfMemoryError</argument>
+                                <argument>-XX:HeapDumpPath=${tmp.dir}/dump.hprof</argument>
+                                <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000</argument>
+                                <argument>-Dorg.jboss.logging.provider=slf4j</argument>
+                                <argument>-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</argument>
+                                <argument>-DAsyncLogger.RingBufferSize=128</argument>
+                                <argument>-Dorg.apache.logging.log4j.simplelog.StatusLogger.level=DEBUG</argument>
+                                <argument>-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager</argument>
+                                <argument>-Dlog4j.configurationFile=file://${app.config.dir}${file.separator}log4j2.xml</argument>
+                                <argument>-Dapp.log.path=${tmp.dir}</argument>
+                                <argument>-Dapp.log.name=${app.name}</argument>
+                                <argument>-cp</argument>
+                                <argument>${project.build.directory}${file.separator}${project.artifactId}-${project.version}.jar${path.separator}${project.build.directory}${file.separator}lib${file.separator}*</argument>
+                                <argument>${main.class}</argument>
+                            </arguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
